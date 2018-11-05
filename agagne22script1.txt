@@ -1,0 +1,15 @@
+SHOW DATABASES;
+DROP DATABASE IF EXISTS agagne22assign2db;
+CREATE DATABASE agagne22assign2db;
+USE agagne22assign2db;
+GRANT USAGE ON *.* TO 'ta'@'localhost';
+DROP USER 'ta'@'localhost';
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319';
+GRANT ALL PRIVILEGES ON yourwesternuseridassign2db.* TO 'ta'@'localhost';
+FLUSH PRIVILEGES;
+SHOW TABLES;
+CREATE TABLE Agent(agentid VARCHAR(2) , firstname VARCHAR(30), lastname VARCHAR(30) , city VARCHAR(15) , commission INT , PRIMARY KEY(agentid));
+CREATE TABLE Product(productid VARCHAR(2) NOT NULL, description VARCHAR(20) , costperitem float , quantity INT , PRIMARY KEY(productid));
+CREATE TABLE Customer( customerid VARCHAR(2) , firstname VARCHAR(30) , lastname VARCHAR(30) , city VARCHAR(15) , phonenumber VARCHAR(20) , agentid VARCHAR(2),PRIMARY KEY(customerid), FOREIGN KEY(agentid) REFERENCES Agent(agentid));
+CREATE TABLE Purchase (customerid VARCHAR(2), productid VARCHAR(2), quantity INT, PRIMARY KEY(customerid, productid) , FOREIGN KEY(customerid) REFERENCES Customer(customerid), FOREIGN KEY(productid) REFERENCES Product(productid));
+SHOW TABLES;
