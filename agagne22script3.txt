@@ -1,0 +1,52 @@
+USE agagne22assign2db;
+
+-- QUERY 1
+
+SELECT description FROM Product;
+
+-- QUERY 2
+SELECT DISTINCT city FROM Customer;
+
+-- QUERY 3
+SELECT * FROM Agent ORDER BY city;
+
+-- QUERY 4
+SELECT firstname, lastname FROM Customer WHERE city= 'Springfield';
+
+-- QUERY 5
+SELECT lastname FROM Customer where agentid = (SELECT agentid FROM Agent WHERE firstname = 'Regis' AND lastname = 'Philbin');
+
+-- QUERY 6
+SELECT description FROM Product WHERE description LIKE '%pad%';
+
+-- QUERY 7
+SELECT Customer.lastname, Product.description, Purchase.quantity FROM Customer,Product, Purchase WHERE Customer.customerid = Purchase.customerid AND Purchase.productid = Product.productid;
+
+-- QUERY 8
+SELECT sum(quantity) as "Homer's total purchases" FROM Purchase WHERE customerid = (SELECT customerid FROM Customer WHERE firstname='Homer');
+
+-- QUERY 9
+SELECT Customer.firstname, Customer.lastname, sum(Purchase.quantity) FROM Customer,Purchase WHERE Customer.customerid = Purchase.customerid GROUP BY Purchase.customerid;
+
+-- QUERY 10
+SELECT description, quantity FROM Product WHERE Product.productid NOT IN (SELECT DISTINCT productid FROM Purchase);
+
+-- QUERY 11
+SELECT description, quantity FROM Product WHERE productid NOT IN (SELECT productid FROM Purchase WHERE customerid = (SELECT customerid FROM Customer WHERE firstname='Fred' AND lastname='Flinstone'));
+
+-- QUERY 12
+SELECT Customer.firstname,Customer.lastname, Agent.firstname,Agent.lastname FROM Customer, Agent WHERE Customer.city = Agent.city AND Agent.agentid = Customer.agentid;
+
+-- QUERY 13
+SELECT sum(quantity) as 'Total number of purchased knee pads' FROM Purchase WHERE productid = (SELECT productid FROM Product WHERE description = 'knee pads');
+
+-- QUERY 14
+-- PAY ATTENTION AND CHECK
+SELECT Product.description FROM Product WHERE Product.productid IN (SELECT productid FROM Purchase GROUP BY Purchase.productid HAVING COUNT(quantity) >3) ;
+
+-- QUERY 15
+SELECT firstname, lastname FROM Agent WHERE agentid IN (SELECT agentid FROM Customer WHERE Customer.customerid IN (SELECT customerid FROM Purchase WHERE productid = (SELECT productid FROM Product WHERE description = 'knee pads')));
+
+
+
+

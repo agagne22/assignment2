@@ -1,0 +1,20 @@
+
+USE agagne22assign2db;
+
+SELECT * FROM Customer;
+SELECT * FROM Agent;
+SELECT * FROM Purchase;
+SELECT * FROM Product;
+
+CREATE VIEW Customer_Purchases AS SELECT Customer.firstname, Customer.lastname, Product.description,Product.costperitem, Purchase.Quantity, Product.costperitem*Purchase.quantity AS total_cost FROM Customer,Product, Purchase WHERE Product.productid = Purchase.productid AND Customer.customerid = Purchase.customerid ORDER BY Customer.lastname ASC;
+
+SELECT * FROM Customer_Purchases;
+
+SELECT * FROM Customer_Purchases WHERE Customer_Purchases.lastname IN ( SELECT lastname FROM Customer_Purchases GROUP BY lastname HAVING sum(total_cost)>100);
+
+DELETE FROM Product WHERE description = "should pads";
+
+SELECT description FROM Product WHERE description = "shoulder pads";
+
+DELETE FROM Agent WHERE city= "Springfield";
+-- Because we did not include DELETE CASCADE when maming our agent table, we cannot delete an agent if its a foreign in the customer table

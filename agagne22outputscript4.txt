@@ -1,0 +1,99 @@
+Warning: Using a password on the command line interface can be insecure.
+ERROR 1451 (23000) at line 19: Cannot delete or update a parent row: a foreign key constraint fails (`agagne22assign2db`.`Customer`, CONSTRAINT `Customer_ibfk_1` FOREIGN KEY (`agentid`) REFERENCES `Agent` (`agentid`))
+--------------
+SELECT * FROM Customer
+--------------
+
+customerid	firstname	lastname	city	phonenumber	agentid
+10	Barney	Rubble	Boston	777-1234	11
+12	Monty	Burns	Springfield	789-0000	99
+13	Wonder	Woman	Kypto	888-1234	33
+14	Peter	Griffens	Providence	987-4567	99
+15	Fred	Flintstone	Boston	777-2345	11
+21	Homer	Simpson	Springfield	686-8958	99
+31	Sideshow	Bob	Springfield	686-5555	66
+--------------
+SELECT * FROM Agent
+--------------
+
+agentid	firstname	lastname	city	commission
+11	Regis	Philbin	Boston	33
+12	Rosie	Cox	Ottawa	50
+22	Courtney	Cox	New York	25
+33	David	Letterman	Bedrock	100
+56	Curtis	Simpson	Leamington	41
+66	Rosie	ODonnell	Ottawa	100
+99	Hugh	Grant	Springfield	16
+--------------
+SELECT * FROM Purchase
+--------------
+
+customerid	productid	quantity
+14	66	19
+15	66	2
+15	78	2
+21	12	14
+21	66	10
+21	99	20
+31	12	5
+31	66	5
+31	78	5
+31	99	5
+--------------
+SELECT * FROM Product
+--------------
+
+productid	description	costperitem	quantity
+11	Bike	150	200
+12	Socks	2	100
+33	shoulder pads	12.3	150
+66	elbow pads	14.25	120
+78	Knee Pads	12.15	70
+88	Roller Blades	75	89
+99	Helmet	29	30
+--------------
+CREATE VIEW Customer_Purchases AS SELECT Customer.firstname, Customer.lastname, Product.description,Product.costperitem, Purchase.Quantity, Product.costperitem*Purchase.quantity AS total_cost FROM Customer,Product, Purchase WHERE Product.productid = Purchase.productid AND Customer.customerid = Purchase.customerid ORDER BY Customer.lastname ASC
+--------------
+
+--------------
+SELECT * FROM Customer_Purchases
+--------------
+
+firstname	lastname	description	costperitem	Quantity	total_cost
+Sideshow	Bob	Socks	2	5	10
+Sideshow	Bob	elbow pads	14.25	5	71.25
+Sideshow	Bob	Knee Pads	12.15	5	60.74999809265137
+Sideshow	Bob	Helmet	29	5	145
+Fred	Flintstone	elbow pads	14.25	2	28.5
+Fred	Flintstone	Knee Pads	12.15	2	24.299999237060547
+Peter	Griffens	elbow pads	14.25	19	270.75
+Homer	Simpson	Socks	2	14	28
+Homer	Simpson	elbow pads	14.25	10	142.5
+Homer	Simpson	Helmet	29	20	580
+--------------
+SELECT * FROM Customer_Purchases WHERE Customer_Purchases.lastname IN ( SELECT lastname FROM Customer_Purchases GROUP BY lastname HAVING sum(total_cost)>100)
+--------------
+
+firstname	lastname	description	costperitem	Quantity	total_cost
+Sideshow	Bob	Socks	2	5	10
+Sideshow	Bob	elbow pads	14.25	5	71.25
+Sideshow	Bob	Knee Pads	12.15	5	60.74999809265137
+Sideshow	Bob	Helmet	29	5	145
+Peter	Griffens	elbow pads	14.25	19	270.75
+Homer	Simpson	Socks	2	14	28
+Homer	Simpson	elbow pads	14.25	10	142.5
+Homer	Simpson	Helmet	29	20	580
+--------------
+DELETE FROM Product WHERE description = "should pads"
+--------------
+
+--------------
+SELECT description FROM Product WHERE description = "shoulder pads"
+--------------
+
+description
+shoulder pads
+--------------
+DELETE FROM Agent WHERE city= "Springfield"
+--------------
+
